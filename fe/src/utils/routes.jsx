@@ -41,5 +41,6 @@ export const router = createBrowserRouter([
     element: <ProfilePage />,
     errorElement: <ErrorPage />,
     action: potoProfileAction,
+    loader: dashboardAction,
   },
 ]);

@@ -3,7 +3,6 @@ import Navbar from "../../components/Navbar";
 
 const DashboardPage = () => {
   const data = useLoaderData();
-
   if (data?.error) return <Navigate to="/login" />;
   return (
     <div>

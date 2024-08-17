@@ -1,13 +1,18 @@
+import { Form, Navigate, useLoaderData } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+
 const ProfilePage = () => {
-  const userId = localStorage.getItem("token");
+  const data = useLoaderData();
+  if (data?.error) return <Navigate to="/login" />;
+
   return (
     <div>
+      <Navbar api={data} />
       <h1>ProfilePage</h1>
-      <form method="post" encType="multipart/form-data" action="/profile">
+      <Form method="post" encType="multipart/form-data" action="/profile">
         <input type="file" name="profile_picture" required />
-        <input type="hidden" name="userId" value={userId} />
-        <button type="submit">Update Profile Picture</button>
-      </form>
+        <button type="submit">Update</button>
+      </Form>
     </div>
   );
 };
