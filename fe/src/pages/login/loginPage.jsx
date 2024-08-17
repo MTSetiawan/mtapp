@@ -1,9 +1,9 @@
 import { Form } from "react-router-dom";
-import Layout from "../../components/layout";
+import LayoutAuth from "../../components/LayoutAuth";
 
 const LoginPage = () => {
   return (
-    <Layout>
+    <LayoutAuth>
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <Form className="card-body" method="post" action="/login">
           <div className="form-control">
@@ -42,7 +42,7 @@ const LoginPage = () => {
           </div>
         </Form>
       </div>
-    </Layout>
+    </LayoutAuth>
   );
 };
 
