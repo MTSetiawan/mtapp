@@ -11,7 +11,7 @@ export const potoProfileAction = async ({ request }) => {
   formData.append("profile_image", profile_picture);
 
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       `${import.meta.env.VITE_API_URL}/api/users/update-profile-image`,
       formData,
       {
@@ -26,5 +26,36 @@ export const potoProfileAction = async ({ request }) => {
   } catch (error) {
     console.error("error", error);
     return redirect("/profile");
+  }
+};
+
+export const UpdateUsername = async ({ request }) => {
+  const token = localStorage.getItem("token");
+  const form = await request.formData();
+  const newUsername = form.get("newUsername");
+  console.log("new Username", newUsername);
+
+  if (!newUsername) {
+    return { error: "newUsername is required" };
+  }
+
+  const data = {
+    username: newUsername,
+  };
+
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/users/update-username`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return { error: error };
   }
 };

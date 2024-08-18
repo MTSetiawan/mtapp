@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const authenticateUser = require("../middleware");
-
 const db = require("../model/database");
 
 const router = express.Router();
@@ -18,11 +17,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post(
+router.put(
   "/update-profile-image",
   authenticateUser,
   upload.single("profile_image"),
-  async (req, res) => {
+  (req, res) => {
     const userId = req.user.id;
     const profileImage = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
 
@@ -39,5 +38,38 @@ router.post(
     });
   }
 );
+
+//  Username Update
+
+router.put("/update-username", authenticateUser, (req, res) => {
+  const { username } = req.body;
+  const userId = req.user.id;
+
+  if (!username) {
+    return res.status(400).json({ error: "New username is required" });
+  }
+
+  try {
+    if (username.length < 3 || username.length > 30) {
+      return res
+        .status(400)
+        .json({ error: "Username must be between 3 and 30 characters" });
+    }
+
+    const result = db.query("UPDATE users SET username = ? WHERE id = ?", [
+      username,
+      userId,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "Username updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update username" });
+  }
+});
 
 module.exports = router;

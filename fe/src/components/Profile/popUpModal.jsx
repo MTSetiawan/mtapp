@@ -1,4 +1,4 @@
-import UpdatePotoProfile from "./profilePicture";
+import UpdateProfile from "./UpdateProfile";
 
 const PopUpModal = () => {
   return (
@@ -17,8 +17,10 @@ const PopUpModal = () => {
             </button>
           </form>
           <div>
-            <p>Edit Poto Profile</p>
-            <UpdatePotoProfile />
+            <p className="text-xl">Update Profile</p>
+            <div className="mt-4">
+              <UpdateProfile />
+            </div>
           </div>
         </div>
       </dialog>
