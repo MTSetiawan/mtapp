@@ -49,7 +49,6 @@ exports.login = (req, res) => {
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      console.log(token);
       res.status(200).json({ message: "Login successful", token });
     } else {
       res.status(400).json({ message: "Login Failed", token });
