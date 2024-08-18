@@ -5,7 +5,7 @@ const DashboardPage = () => {
   const data = useLoaderData();
   if (data?.error) return <Navigate to="/login" />;
   return (
-    <div>
+    <div className="flex">
       <Navbar api={data} />
       <h1>Dashboard</h1>
       <p>{data?.username || data?.error}</p>

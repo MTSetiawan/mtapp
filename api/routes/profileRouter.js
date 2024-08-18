@@ -25,10 +25,9 @@ router.post(
   async (req, res) => {
     const userId = req.user.id;
     const profileImage = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
-    console.log({ upload });
 
     const sql = "UPDATE users SET profile_image = ? WHERE id = ?";
-    const data = db.query(sql, [profileImage, userId], (err, result) => {
+    db.query(sql, [profileImage, userId], (err, result) => {
       if (err) {
         console.error("error", err);
       }
@@ -38,7 +37,6 @@ router.post(
         result,
       });
     });
-    console.log(data);
   }
 );
 
