@@ -1,54 +1,25 @@
 import { Link } from "react-router-dom";
 
-const Navbar = ({ api }) => {
+const Navbar = () => {
   return (
-    <div className="navbar bg-lime-500">
-      <div className="flex-1">
-        <Link
-          to="/dashboard"
-          className="text-2xl text-black font-semibold hover:text-gray-100 transition duration-200 ease-in-out"
-        >
-          MtApp
+    <div className="fixed top-0 left-0 w-64 h-screen bg-gray-800 text-white">
+      <div className="p-4 text-xl font-bold">MtApp</div>
+      <div className="flex flex-col flex-grow">
+        <Link to="/dashboard" className="p-4 hover:bg-grLinky-700">
+          Home
         </Link>
-      </div>
-      <div className="flex-none gap-2">
-        <div className="form-control">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-24 md:w-auto"
-          />
-        </div>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src={api.profile_image}
-              />
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <Link to="/profile" className="justify-between">
-                Profile
-              </Link>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
-        </div>
+        <Link to="#" className="p-4 hover:bg-grLinky-700">
+          Explore
+        </Link>
+        <Link to="#" className="p-4 hover:bg-grLinky-700">
+          MessLinkges
+        </Link>
+        <Link to="#" className="p-4 hover:bg-grLinky-700">
+          NotificLinktions
+        </Link>
+        <Link to="/profile" className="p-4 hover:bg-grLinky-700">
+          Profile
+        </Link>
       </div>
     </div>
   );

@@ -10,7 +10,6 @@ import {
 } from "../action/userAction";
 import DashboardPage from "../pages/dashboard/dashboardPage";
 import ProfilePage from "../pages/profile/profilePage";
-import { potoProfileAction } from "../action/profileAction";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +39,6 @@ export const router = createBrowserRouter([
     path: "/profile",
     element: <ProfilePage />,
     errorElement: <ErrorPage />,
-    action: potoProfileAction,
     loader: dashboardAction,
   },
 ]);
