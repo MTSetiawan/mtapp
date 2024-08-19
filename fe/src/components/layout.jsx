@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React from "react";
-import Navbar from "./Navbar";
 
-const Layout = async ({ children }) => {
-  return <div className="h-screen">{children}</div>;
+const Layout = ({ children }) => {
+  return <div className="flex-grow p-4 bg-gray-200 ml-64">{children}</div>;
 };
 
 export default Layout;

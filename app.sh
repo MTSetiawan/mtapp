@@ -18,7 +18,7 @@ elif [ "$COMMAND" = "stop" ]; then
     echo "Stopping all running instance..."
     pkill -f "node"
 elif [ "$COMMAND" = "install" ]; then
-    echo "preparing cuymodoro project..."
+    echo "preparing mtapp project..."
     cd api
     start "" npm install -y
     cd ../fe
