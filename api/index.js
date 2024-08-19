@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const path = require("path");
+
+const authenticateToken = require("./middleware");
 const db = require("./model/database");
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profileRouter");
-const authenticateToken = require("./middleware");
-const path = require("path");
+const usersPostsRouter = require("./routes/userPosts");
 
 const app = express();
 app.use(express.json());
@@ -13,26 +14,34 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 const PORT = 3002;
 
-app.get("/", authenticateToken, (req, res) => {
+app.get("/", authenticateToken, async (req, res) => {
   const userId = req.user.id;
 
-  const sql = `SELECT * FROM users WHERE id = ?`;
+  try {
+    const connection = await db.getConnection();
 
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+    try {
+      const [results] = await connection.execute(
+        `SELECT * FROM users WHERE id = ?`,
+        [userId]
+      );
+
+      if (results.length === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json(results[0]);
+    } finally {
+      connection.release();
     }
-
-    if (results.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.json(results[0]);
-  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", profileRoutes);
+app.use("/api/users", usersPostsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port${PORT}`);

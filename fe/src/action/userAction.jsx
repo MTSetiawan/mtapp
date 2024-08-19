@@ -19,6 +19,7 @@ export const registerAction = async ({ request }) => {
     console.error("error", error);
   }
 };
+
 export const loginAction = async ({ request }) => {
   try {
     const form = await request.formData();
@@ -30,12 +31,17 @@ export const loginAction = async ({ request }) => {
       { username, password }
     );
 
-    if (response.data) {
-      localStorage.setItem("token", response.data.token);
+    if (response.status === 200) {
+      const { token } = response.data;
+
+      localStorage.setItem("token", token);
+
       return redirect("/dashboard");
+    } else {
+      console.error("Login failed:", response.data.message);
     }
   } catch (error) {
-    console.error("error", error);
+    console.error("Error during login:", error.message);
   }
 };
 
@@ -54,4 +60,10 @@ export const dashboardAction = async () => {
     }
     return { error: error.response?.data?.error || "Something went wrong" };
   }
+};
+
+export const logoutAction = () => {
+  localStorage.removeItem("token");
+
+  return redirect("/login");
 };

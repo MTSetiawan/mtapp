@@ -10,6 +10,7 @@ import {
 } from "../action/userAction";
 import DashboardPage from "../pages/dashboard/dashboardPage";
 import ProfilePage from "../pages/profile/profilePage";
+import { getAllPostAction } from "../action/userPostsAction";
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: <DashboardPage />,
     errorElement: <ErrorPage />,
-    loader: dashboardAction,
+    loader: getAllPostAction,
   },
   {
     path: "/register",

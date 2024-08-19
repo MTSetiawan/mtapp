@@ -36,22 +36,38 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   const { username, password } = req.body;
 
-  const sql = `SELECT * FROM users WHERE username = ?`;
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
 
-  db.query(sql, [username], async (err, result) => {
-    const user = result[0];
+  try {
+    // Gunakan Promise untuk query database
+    const sql = `SELECT * FROM users WHERE username = ?`;
+    const [rows] = await db.query(sql, [username]);
 
+    if (rows.length === 0) {
+      return res.status(400).json({ message: "Invalid username or password" });
+    }
+
+    const user = rows[0];
     const match = await bcrypt.compare(password, user.password);
+
     if (match) {
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      res.status(200).json({ message: "Login successful", token });
+      return res.status(200).json({ message: "Login successful", token });
     } else {
-      res.status(400).json({ message: "Login Failed", token });
+      return res.status(400).json({ message: "Invalid username or password" });
     }
-  });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error during login", error: error.message });
+  }
 };

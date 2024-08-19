@@ -4,7 +4,7 @@ const PopUpModal = () => {
   return (
     <div>
       <button
-        className="btn"
+        className="btn btn-primary"
         onClick={() => document.getElementById("my_modal_5").showModal()}
       >
         Edit Profile
