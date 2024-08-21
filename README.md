@@ -18,10 +18,15 @@ MtApp adalah aplikasi semacam SOCIAL MEDIA seperti instagram ataupun X.
 ### 🚀 Fitur MtApp
 
 -User authentication
+
 -Posts 
+
 -Follow
+
 -Posts
+
 -Message
+
 
 ### ⚙️ Teknologi Pengembangan
 
