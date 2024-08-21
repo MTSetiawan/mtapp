@@ -13,7 +13,7 @@
 
 ## ✨ Apasih MtApp itu? ✨
 
-MtAopp adalah aplikasi semacam SOCIAL MEDIA seperti instagram ataupun X.
+MtApp adalah aplikasi semacam SOCIAL MEDIA seperti instagram ataupun X.
 
 ### 🚀 Fitur MtApp
 
