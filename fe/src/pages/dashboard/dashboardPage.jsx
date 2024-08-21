@@ -8,7 +8,7 @@ const DashboardPage = () => {
   if (data?.error) return <Navigate to="/login" />;
   return (
     <div className="flex-grow p-4 min-h-screen bg-gray-200 ml-64">
-      <Navbar />
+      <Navbar user={data} />
       <CreatePost />
       <div className="mt-4">
         <CardPost api={data} useGrid={false} />

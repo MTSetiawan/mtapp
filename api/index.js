@@ -9,7 +9,7 @@ const profileRoutes = require("./routes/profileRouter");
 const usersPostsRouter = require("./routes/userPosts");
 const usersLikeRouter = require("./routes/userLikes");
 const usersMessage = require("./routes/usersMessage");
-
+const usersFollows = require("./routes/usersFollows");
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -46,6 +46,7 @@ app.use("/api/users", profileRoutes);
 app.use("/api/users", usersPostsRouter);
 app.use("/api/users", usersLikeRouter);
 app.use("/api/users", usersMessage);
+app.use("/api/users", usersFollows);
 
 app.listen(PORT, () => {
   console.log(`Server running on port${PORT}`);

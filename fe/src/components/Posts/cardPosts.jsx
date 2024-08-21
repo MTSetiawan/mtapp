@@ -4,7 +4,10 @@ import { formatDistanceToNow } from "date-fns";
 
 const CardPosts = ({ api, useGrid }) => {
   const getRelativeTime = (dateString) => {
-    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+    const relativeTime = formatDistanceToNow(new Date(dateString), {
+      addSuffix: true,
+    });
+    return relativeTime.replace("about ", "");
   };
   return (
     <div

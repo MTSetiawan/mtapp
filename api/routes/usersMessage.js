@@ -1,3 +1,4 @@
+const { body, validationResult } = require("express-validator");
 const express = require("express");
 const authenticateUser = require("../middleware");
 const db = require("../model/database");
@@ -28,21 +29,37 @@ router.get("/message/:userId", authenticateUser, async (req, res) => {
   }
 });
 
-router.post("/message", authenticateUser, async (req, res) => {
-  const { receiverId, message } = req.body;
-  const senderId = req.user.id;
+router.post(
+  "/message",
+  authenticateUser,
+  [
+    body("receiverId").isInt().withMessage("Receiver ID must be an integer"),
+    body("message")
+      .isString()
+      .notEmpty()
+      .withMessage("Message cannot be empty"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  const sql = `INSERT INTO users_message (send_id, receiver_id, message) VALUES (?, ?, ?)`;
-  try {
-    const result = await db.query(sql, [senderId, receiverId, message]);
-    res.status(201).json({
-      message: "Message send succesfully",
-      messageId: result.insertId,
-    });
-  } catch (error) {
-    console.error("Error send Message", error);
-    res.status(500).json({ error: "Failed to send Message" });
+    const { receiverId, message } = req.body;
+    const senderId = req.user.id;
+
+    const sql = `INSERT INTO users_message (send_id, receiver_id, message) VALUES (?, ?, ?)`;
+    try {
+      const result = await db.query(sql, [senderId, receiverId, message]);
+      res.status(201).json({
+        message: "Message sent successfully",
+        messageId: result.insertId,
+      });
+    } catch (error) {
+      console.error("Error sending message", error);
+      res.status(500).json({ error: "Failed to send message" });
+    }
   }
-});
+);
 
 module.exports = router;
