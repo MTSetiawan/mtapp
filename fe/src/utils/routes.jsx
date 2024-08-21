@@ -3,11 +3,7 @@ import HomePage from "../pages/home";
 import ErrorPage from "../pages/error";
 import RegisterPage from "../pages/register";
 import LoginPage from "../pages/login";
-import {
-  dashboardAction,
-  loginAction,
-  registerAction,
-} from "../action/userAction";
+import { loginAction, registerAction } from "../action/userAction";
 import DashboardPage from "../pages/dashboard/dashboardPage";
 import ProfilePage from "../pages/profile/profilePage";
 import { getAllPostAction } from "../action/userPostsAction";
@@ -37,9 +33,13 @@ export const router = createBrowserRouter([
     action: loginAction,
   },
   {
+    path: "/profile/:userId",
+    element: <ProfilePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/profile",
     element: <ProfilePage />,
     errorElement: <ErrorPage />,
-    loader: dashboardAction,
   },
 ]);

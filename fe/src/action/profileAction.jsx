@@ -29,7 +29,7 @@ export const potoProfileAction = async ({ request }) => {
   }
 };
 
-export const UpdateUsername = async ({ request }) => {
+export const UpdateUsernameAction = async ({ request }) => {
   const token = localStorage.getItem("token");
   const form = await request.formData();
   const newUsername = form.get("newUsername");

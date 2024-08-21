@@ -15,6 +15,7 @@ const LoginPage = () => {
               name="username"
               placeholder="username"
               className="input input-bordered"
+              autoComplete="current-username"
               required
             />
           </div>
@@ -27,6 +28,7 @@ const LoginPage = () => {
               name="password"
               placeholder="password"
               className="input input-bordered"
+              autoComplete="current-password"
               required
             />
             <label className="label">
@@ -37,7 +39,7 @@ const LoginPage = () => {
           </div>
           <div className="form-control mt-6">
             <button className="btn btn-primary" type="submit">
-              Register
+              Login
             </button>
           </div>
         </Form>

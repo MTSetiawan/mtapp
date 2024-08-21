@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { potoProfileAction, UpdateUsername } from "../../action/profileAction";
+import {
+  potoProfileAction,
+  UpdateUsernameAction,
+} from "../../action/profileAction";
 
 const UpdateProfile = () => {
   const [error, setError] = useState(null);
@@ -36,7 +39,7 @@ const UpdateProfile = () => {
     };
 
     try {
-      const result = await UpdateUsername({ request });
+      const result = await UpdateUsernameAction({ request });
       if (result.error) {
         throw new Error(result.error.message);
       } else {

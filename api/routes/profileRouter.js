@@ -72,4 +72,29 @@ router.put("/update-username", authenticateUser, (req, res) => {
   }
 });
 
+router.get("/profile/:userId?", authenticateUser, async (req, res) => {
+  try {
+    let { userId } = req.params;
+
+    if (!userId) userId = req.user.id;
+
+    const sqlUser = "SELECT * FROM users WHERE id = ?";
+    const [user] = await db.query(sqlUser, [userId]);
+
+    const sqlPost = `
+    SELECT posts.*, users.username 
+    FROM users_posts AS posts
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.user_id = ?;
+  `;
+
+    const [posts] = await db.query(sqlPost, [userId]);
+
+    res.json({ user: user[0], posts });
+  } catch (error) {
+    console.error("Error", error);
+    res.status(401).json({ message: "Internal server" });
+  }
+});
+
 module.exports = router;
