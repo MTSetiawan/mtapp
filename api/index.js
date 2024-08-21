@@ -7,6 +7,8 @@ const db = require("./model/database");
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profileRouter");
 const usersPostsRouter = require("./routes/userPosts");
+const usersLikeRouter = require("./routes/userLikes");
+const usersMessage = require("./routes/usersMessage");
 
 const app = express();
 app.use(express.json());
@@ -42,6 +44,8 @@ app.get("/", authenticateToken, async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", profileRoutes);
 app.use("/api/users", usersPostsRouter);
+app.use("/api/users", usersLikeRouter);
+app.use("/api/users", usersMessage);
 
 app.listen(PORT, () => {
   console.log(`Server running on port${PORT}`);

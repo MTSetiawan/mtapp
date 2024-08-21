@@ -25,10 +25,10 @@ export const createPostAction = async ({ request }) => {
   const token = localStorage.getItem("token");
   const form = await request.formData();
   const contentPosts = form.get("contentPosts");
-  console.log("new Username", contentPosts);
+  console.log("Content", contentPosts);
 
   if (!contentPosts) {
-    return { error: "newUsername is required" };
+    return { error: "Content is required" };
   }
 
   const data = {

@@ -10,7 +10,9 @@ const DashboardPage = () => {
     <div className="flex-grow p-4 min-h-screen bg-gray-200 ml-64">
       <Navbar />
       <CreatePost />
-      <CardPost api={data} />
+      <div className="mt-4">
+        <CardPost api={data} useGrid={false} />
+      </div>
     </div>
   );
 };
