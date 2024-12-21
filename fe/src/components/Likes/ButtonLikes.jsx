@@ -1,85 +1,91 @@
-/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const LikeButton = ({ postId, initialLikes, userLiked }) => {
+const LikeButton = ({ postId, initialLikes = 0, userLiked = false }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(userLiked);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchLikesCount = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/likes-count/${postId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setLikes(response.data.likeCount);
-      } catch (error) {
-        console.error("Error fetching likes count:", error);
-      }
-    };
-
-    const checkUserLiked = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/check-like`,
-          {
-            params: { posts_id: postId },
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+        const [likesRes, likedRes] = await Promise.all([
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/users/likes-count/${postId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          ),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/users/check-like`, {
+            params: { post_id: postId },
             headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setLiked(response.data.isLiked);
+          }),
+        ]);
+        setLikes(likesRes.data.likeCount);
+        setLiked(likedRes.data.isLiked);
       } catch (error) {
-        console.error("Error checking if user liked:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchLikesCount();
-    checkUserLiked();
+    fetchData();
   }, [postId]);
 
   const handleLikes = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/like`,
-        { posts_id: postId },
+        { post_id: postId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setLikes(likes + 1);
       setLiked(true);
     } catch (error) {
-      console.error("error like posts", error);
+      console.error("Error liking post:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleUnlike = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/unlike`,
-        { posts_id: postId },
+        { post_id: postId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setLikes(likes - 1);
       setLiked(false);
     } catch (error) {
       console.error("Error unliking post:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <div className="flex items-center">
+    <div className="flex items-center flex-wrap">
       <button
+        disabled={loading}
         onClick={liked ? handleUnlike : handleLikes}
         className={`text-white font-bold py-2 px-4 rounded ${
           liked ? "bg-red-500" : "bg-blue-500"
-        }`}
+        } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        {liked ? "Unlike" : "Like"}
+        {loading ? "Processing..." : liked ? "Unlike" : "Like"}
       </button>
-      <span className="ml-2">{likes}</span>
+      <span className="ml-2 text-sm">
+        {likes} {likes === 1 ? "like" : "likes"}
+      </span>
     </div>
   );
 };

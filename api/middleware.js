@@ -16,4 +16,14 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
+const validatePostId = (req, res, next) => {
+  const { post_id, postId } = req.body || req.params;
+  if (!post_id && !postId) {
+    return res.status(400).json({ error: "Post ID is required." });
+  }
+  next();
+};
+
+module.exports = validatePostId;
+
 module.exports = authenticateUser;
