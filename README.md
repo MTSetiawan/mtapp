@@ -23,8 +23,6 @@ MtApp adalah aplikasi semacam SOCIAL MEDIA seperti instagram ataupun X.
 
 -Follow
 
--Posts
-
 -Message
 
 -Like
