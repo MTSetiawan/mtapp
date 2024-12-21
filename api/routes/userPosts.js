@@ -23,15 +23,41 @@ router.post("/posts", authenticateUser, (req, res) => {
 router.get("/posts", authenticateUser, async (req, res) => {
   try {
     const [getAllPosts] = await db.query(
-      `SELECT posts.*, users.username 
-    FROM posts AS posts
-    JOIN users ON posts.user_id = users.id;`
+      `SELECT posts.*, 
+    (SELECT COUNT(*) FROM comments WHERE post_id = posts.id) AS comment_count
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+  `
     );
     res.json(getAllPosts);
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error fetching posts", error: error.message });
+  }
+});
+
+router.get("/posts/:postId", authenticateUser, async (req, res) => {
+  const { postId } = req.params;
+
+  const sql = `
+    SELECT posts.*, users.username
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.id = ?;`;
+  try {
+    const [detailPosts] = await db.query(sql, [postId]);
+
+    if (detailPosts.length === 0) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json(detailPosts[0]);
+  } catch (err) {
+    console.error("Error fetching post details:", err);
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: err.message });
   }
 });
 

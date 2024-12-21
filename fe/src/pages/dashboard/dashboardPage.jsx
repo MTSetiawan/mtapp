@@ -5,6 +5,7 @@ import CreatePost from "../../components/Posts/createPost";
 
 const DashboardPage = () => {
   const data = useLoaderData();
+  console.log("Data", data);
   if (data?.error) return <Navigate to="/login" />;
   return (
     <div className="flex-grow p-4 min-h-screen bg-gray-200 ml-64">

@@ -36,6 +36,10 @@ const CardPosts = ({ api, useGrid }) => {
                 userLiked={data.userLiked}
               />
               <p>{getRelativeTime(data.created_at)}</p>
+              <p className="text-gray-600">
+                {data.comment_count}{" "}
+                {data.comment_count === 1 ? "comment" : "comments"}
+              </p>
             </div>
           </div>
         );
