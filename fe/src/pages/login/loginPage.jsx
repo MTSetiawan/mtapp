@@ -8,14 +8,14 @@ const LoginPage = () => {
         <Form className="card-body" method="post" action="/login">
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Username</span>
+              <span className="label-text">Email</span>
             </label>
             <input
               type="text"
-              name="username"
-              placeholder="username"
+              name="email"
+              placeholder="Email"
               className="input input-bordered"
-              autoComplete="current-username"
+              autoComplete="current-email"
               required
             />
           </div>
@@ -32,6 +32,9 @@ const LoginPage = () => {
               required
             />
             <label className="label">
+              <a href="/register" className="label-text-alt link link-hover">
+                dont have an account?
+              </a>
               <a href="#" className="label-text-alt link link-hover">
                 Forgot password?
               </a>

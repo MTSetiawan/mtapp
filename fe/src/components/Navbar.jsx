@@ -51,10 +51,10 @@ const Navbar = () => {
         <Link to="/dashboard" className="p-4 hover:bg-gray-200 Linky-700">
           Home
         </Link>
-        <Link to="#" className="p-4 hover:bg-gray-200 Linky-700">
+        <Link to="/search" className="p-4 hover:bg-gray-200 Linky-700">
           Explore
         </Link>
-        <Link to="#" className="p-4 hover:bg-gray-200 Linky-700">
+        <Link to="/message" className="p-4 hover:bg-gray-200 Linky-700">
           Messages
         </Link>
         <Link to="#" className="p-4 hover:bg-gray-200 Linky-700">

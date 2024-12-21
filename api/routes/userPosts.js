@@ -9,7 +9,7 @@ router.post("/posts", authenticateUser, (req, res) => {
   const userId = req.user.id;
 
   try {
-    const sql = "INSERT INTO users_posts (user_id,content) VALUES (?, ?)";
+    const sql = "INSERT INTO posts (user_id,content) VALUES (?, ?)";
     const result = db.query(sql, [userId, content]);
     const posts = result.insertId;
 
@@ -24,7 +24,7 @@ router.get("/posts", authenticateUser, async (req, res) => {
   try {
     const [getAllPosts] = await db.query(
       `SELECT posts.*, users.username 
-    FROM users_posts AS posts
+    FROM posts AS posts
     JOIN users ON posts.user_id = users.id;`
     );
     res.json(getAllPosts);
@@ -40,9 +40,7 @@ router.delete("/posts/:postId", authenticateUser, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const result = await db.query("SELECT * FROM users_posts WHERE id = ?", [
-      postId,
-    ]);
+    const result = await db.query("SELECT * FROM posts WHERE id = ?", [postId]);
     const post = result[0];
     if (post.length === 0) {
       return res.status(404).json({ message: "Posts not found" });
@@ -56,7 +54,7 @@ router.delete("/posts/:postId", authenticateUser, async (req, res) => {
         .json({ message: "You are not authorized to delete this post" });
     }
 
-    await db.query("DELETE FROM users_posts WHERE id = ?", [postId]);
+    await db.query("DELETE FROM posts WHERE id = ?", [postId]);
     res.status(200).json({ message: "Delete Posts succesfully" });
   } catch (error) {
     console.error("Errror delete Posts", error);

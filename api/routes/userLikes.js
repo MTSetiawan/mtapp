@@ -5,16 +5,72 @@ const authenticateUser = require("../middleware");
 const router = express.Router();
 
 router.post("/like", authenticateUser, async (req, res) => {
-  const { postId } = req.body;
-  const userId = req.user.id;
+  const { post_id } = req.body;
+  const user_id = req.user.id;
 
   try {
-    const sql = "INSERT INTO likes (post_id, user_id) VALUES (?, ?)";
-    const [resul] = await db.query(sql, [postId, userId]);
-    res.status(201).json({ message: "like succesfully" });
+    const [existingLike] = await db.query(
+      "SELECT * FROM likes WHERE users_id = ? AND posts_id = ?",
+      [user_id, post_id]
+    );
+    if (existingLike.length > 0) {
+      return res.status(400).json({ error: "Already liked this post." });
+    }
+
+    await db.query("INSERT INTO likes (users_id, posts_id) VALUES (?, ?)", [
+      user_id,
+      post_id,
+    ]);
+    res.status(200).json({ message: "Post liked successfully." });
   } catch (error) {
-    console.error("Error like Posts", error);
-    res.status(500).json({ error: "Failed to likes posts" });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/unlike", authenticateUser, async (req, res) => {
+  const { post_id } = req.body;
+  const user_id = req.user.id;
+
+  try {
+    await db.query("DELETE FROM likes WHERE users_id = ? AND posts_id = ?", [
+      user_id,
+      post_id,
+    ]);
+
+    res.status(200).json({ message: "Post unliked successfully." });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/check-like", authenticateUser, async (req, res) => {
+  const { post_id } = req.query;
+  const user_id = req.user.id;
+
+  try {
+    const [result] = await db.query(
+      "SELECT * FROM likes WHERE users_id = ? AND posts_id = ?",
+      [user_id, post_id]
+    );
+
+    res.status(200).json({ isLiked: result.length > 0 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/likes-count/:postId", authenticateUser, async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const [result] = await db.query(
+      "SELECT COUNT(*) AS likeCount FROM likes WHERE posts_id = ?",
+      [postId]
+    );
+
+    res.status(200).json({ likeCount: result[0].likeCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

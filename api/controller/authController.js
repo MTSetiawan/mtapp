@@ -5,53 +5,57 @@ const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
     const hashPassword = await bcrypt.hash(password, saltRounds);
+    const defaultProfileImage = `${
+      process.env.BASE_URL || "http://localhost:3000"
+    }/images/default-profile.jpg`;
 
-    const defaultProfileImage = `${process.env.BASE_URL}/images/default-profile.jpg`;
-
+    console.log("Preparing query...");
     const sql =
-      "INSERT INTO users (username, password,profile_image) VALUES (?, ?,?)";
-
-    const result = await new Promise((resolve, reject) => {
-      db.query(
-        sql,
-        [username, hashPassword, defaultProfileImage],
-        (err, result) => {
-          if (err) {
-            console.error("Database query error: ", err);
-            return reject(err);
-          }
-          resolve(result);
+      "INSERT INTO users (username,email, password,profile_image) VALUES (?, ?,?,?)";
+    db.query(
+      sql,
+      [username, email, hashPassword, defaultProfileImage],
+      (err, result) => {
+        if (err) {
+          console.error("Database query error: ", err);
+          return res.status(500).json({ message: "Database error" });
         }
-      );
-    });
+        console.log("Query executed successfully:", result);
+        res.status(201).json({ message: "Register Successful" });
+      }
+    );
 
-    console.log("User registered successfully:", result);
-    return res.status(201).json({ message: "Register Successful", result });
+    console.log("Endpoint /register called");
+    res.status(201).json({ message: "Register Successful" });
+    console.log("Response sent");
   } catch (err) {
     console.error("Error during registration: ", err);
-    return res.status(400).json({ message: "Register Failed" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Username and password are required" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
   }
 
   try {
-    // Gunakan Promise untuk query database
-    const sql = `SELECT * FROM users WHERE username = ?`;
-    const [rows] = await db.query(sql, [username]);
+    // Query untuk mengambil data pengguna berdasarkan email
+    const [rows] = await db.execute("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
 
     if (rows.length === 0) {
-      return res.status(400).json({ message: "Invalid username or password" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const user = rows[0];
@@ -61,13 +65,37 @@ exports.login = async (req, res) => {
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      return res.status(200).json({ message: "Login successful", token });
+      res.status(201).json({ message: "Login successful", token });
     } else {
-      return res.status(400).json({ message: "Invalid username or password" });
+      res.status(400).json({ message: "Invalid email or password" });
     }
   } catch (error) {
-    return res
+    res
       .status(500)
-      .json({ message: "Error during login", error: error.message });
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+exports.search = async (req, res) => {
+  const searchQuery = req.query.q;
+
+  if (!searchQuery) {
+    return res.status(400).json({ message: "Search query is required" });
+  }
+
+  try {
+    const results = await new Promise((resolve, reject) => {
+      db.query(
+        "SELECT id, username FROM users WHERE username LIKE ? LIMIT 10",
+        [`%${searchQuery}%`],
+        (err, results) => {
+          if (err) return reject(err);
+          resolve(results);
+        }
+      );
+    });
+    res.status(200).json({ data: results });
+  } catch (error) {
+    res.status(500).json({ message: "Error searching users", error });
   }
 };
