@@ -9,8 +9,11 @@ const PopUpModal = () => {
       >
         Edit Profile
       </button>
-      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+      <dialog
+        id="my_modal_5"
+        className="modal modal-bottom backdrop-blur-sm sm:modal-middle"
+      >
+        <div className="modal-box bg-gray-100">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕

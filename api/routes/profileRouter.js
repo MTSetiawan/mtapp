@@ -83,7 +83,7 @@ router.get("/profile/:userId?", authenticateUser, async (req, res) => {
 
     const sqlPost = `
     SELECT posts.*, users.username 
-    FROM users_posts AS posts
+    FROM posts AS posts
     JOIN users ON posts.user_id = users.id
     WHERE posts.user_id = ?;
   `;

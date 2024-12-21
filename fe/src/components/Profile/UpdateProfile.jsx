@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import {
   potoProfileAction,
   UpdateUsernameAction,
 } from "../../action/profileAction";
 
 const UpdateProfile = () => {
-  const [error, setError] = useState(null);
-  const [succesMessage, setSuccesMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -24,7 +22,17 @@ const UpdateProfile = () => {
         navigate(result.url);
       }
     } catch (err) {
-      setError("Failed to update profile picture.");
+      toast.error("Failed to update poto profile", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       console.error("Error updating profile picture:", err);
     }
   };
@@ -43,17 +51,37 @@ const UpdateProfile = () => {
       if (result.error) {
         throw new Error(result.error.message);
       } else {
-        setSuccesMessage("Username Update Succesfully");
+        toast.success("Update Usernam Succesfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       }
     } catch (err) {
-      setError("Failed to Update");
+      toast.error("Update Username Failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       console.error("error update", err);
     }
   };
 
   return (
     <div className="">
-      <div className="card card-body bg-base-300">
+      <div className="card card-body bg-gray-200">
         <h1 className="text-xl">Update Poto Profile</h1>
         <form
           onSubmit={handleSubmit}
@@ -65,14 +93,14 @@ const UpdateProfile = () => {
             name="profile_picture"
             accept="image/*"
             required
-            className="file-input file-input-bordered w-full max-w-xs"
+            className="file-input file-input-bordered w-full max-w-xs bg-gray-300"
           />
           <button type="submit" className="btn btn-primary mt-3">
             Update
           </button>
         </form>
       </div>
-      <div className="card card-body bg-base-300 mt-3">
+      <div className="card card-body bg-gray-200 mt-3">
         <h1 className="text-xl">Update Username</h1>
         <form
           onSubmit={handleUsernameSubmit}
@@ -84,15 +112,14 @@ const UpdateProfile = () => {
             name="newUsername"
             placeholder="Update Username"
             required
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-gray-300"
           />
           <button type="submit" className="btn btn-primary mt-3">
             Update
           </button>
         </form>
       </div>
-      {error && <p>{error}</p>}
-      {succesMessage && <p style={{ color: "green" }}>{succesMessage}</p>}
+      <ToastContainer />
     </div>
   );
 };

@@ -10,6 +10,7 @@ const usersPostsRouter = require("./routes/userPosts");
 const usersLikeRouter = require("./routes/userLikes");
 const usersMessage = require("./routes/usersMessage");
 const usersFollows = require("./routes/usersFollows");
+
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -41,7 +42,7 @@ app.get("/", authenticateToken, async (req, res) => {
   }
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/users", authRoutes);
 app.use("/api/users", profileRoutes);
 app.use("/api/users", usersPostsRouter);
 app.use("/api/users", usersLikeRouter);

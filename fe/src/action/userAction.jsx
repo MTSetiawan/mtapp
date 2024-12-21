@@ -5,15 +5,20 @@ export const registerAction = async ({ request }) => {
   try {
     const form = await request.formData();
     const username = form.get("username");
+    const email = form.get("email");
     const password = form.get("password");
 
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/auth/register`,
-      { username, password }
+      `${import.meta.env.VITE_API_URL}/api/users/register`,
+      { username, email, password }
     );
 
-    if (response.data) {
+    console.log("Response from API:", response);
+    if (response.status === 201) {
+      console.log("Redirecting to /login");
       return redirect("/login");
+    } else {
+      console.error("Response data missing or invalid");
     }
   } catch (error) {
     console.error("error", error);
@@ -23,15 +28,15 @@ export const registerAction = async ({ request }) => {
 export const loginAction = async ({ request }) => {
   try {
     const form = await request.formData();
-    const username = form.get("username");
+    const email = form.get("email");
     const password = form.get("password");
 
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/auth/login`,
-      { username, password }
+      `${import.meta.env.VITE_API_URL}/api/users/login`,
+      { email, password }
     );
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       const { token } = response.data;
 
       localStorage.setItem("token", token);

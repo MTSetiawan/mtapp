@@ -37,7 +37,7 @@ const ProfilePage = () => {
               <h1 className="text-2xl font-semibold">{profile?.username}</h1>
               <div className="flex justify-center sm:justify-start space-x-4 mt-2">
                 <div className="text-center">
-                  <span className="block font-bold">24</span>
+                  <span className="block font-bold">{posts.length}</span>
                   <span>Posts</span>
                 </div>
                 <div className="text-center">

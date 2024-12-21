@@ -7,6 +7,8 @@ import { loginAction, registerAction } from "../action/userAction";
 import DashboardPage from "../pages/dashboard/dashboardPage";
 import ProfilePage from "../pages/profile/profilePage";
 import { getAllPostAction } from "../action/userPostsAction";
+import MessagePage from "../pages/message";
+import UserSearch from "../pages/search/userSearch";
 
 export const router = createBrowserRouter([
   {
@@ -38,8 +40,13 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/profile",
-    element: <ProfilePage />,
+    path: "/search",
+    element: <UserSearch />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/message/:userId",
+    element: <MessagePage />,
     errorElement: <ErrorPage />,
   },
 ]);
