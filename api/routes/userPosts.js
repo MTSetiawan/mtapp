@@ -23,10 +23,17 @@ router.post("/posts", authenticateUser, (req, res) => {
 router.get("/posts", authenticateUser, async (req, res) => {
   try {
     const [getAllPosts] = await db.query(
-      `SELECT posts.*, 
+      `SELECT 
+    posts.*, 
+    users.username, 
     (SELECT COUNT(*) FROM comments WHERE post_id = posts.id) AS comment_count
-    FROM posts
-    JOIN users ON posts.user_id = users.id
+FROM 
+    posts
+JOIN 
+    users 
+ON 
+    posts.user_id = users.id;
+
   `
     );
     res.json(getAllPosts);

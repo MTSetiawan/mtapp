@@ -1,23 +1,24 @@
 const express = require("express");
 const db = require("../model/database");
 const authenticateUser = require("../middleware");
+const validatePostId = require("../middleware");
 
 const router = express.Router();
 
-router.post("/like", authenticateUser, async (req, res) => {
+router.post("/like", authenticateUser, validatePostId, async (req, res) => {
   const { post_id } = req.body;
   const user_id = req.user.id;
 
   try {
     const [existingLike] = await db.query(
-      "SELECT * FROM likes WHERE users_id = ? AND posts_id = ?",
+      "SELECT * FROM likes WHERE user_id = ? AND post_id = ?",
       [user_id, post_id]
     );
     if (existingLike.length > 0) {
       return res.status(400).json({ error: "Already liked this post." });
     }
 
-    await db.query("INSERT INTO likes (users_id, posts_id) VALUES (?, ?)", [
+    await db.query("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", [
       user_id,
       post_id,
     ]);
@@ -32,7 +33,7 @@ router.post("/unlike", authenticateUser, async (req, res) => {
   const user_id = req.user.id;
 
   try {
-    await db.query("DELETE FROM likes WHERE users_id = ? AND posts_id = ?", [
+    await db.query("DELETE FROM likes WHERE user_id = ? AND post_id = ?", [
       user_id,
       post_id,
     ]);
@@ -49,7 +50,7 @@ router.get("/check-like", authenticateUser, async (req, res) => {
 
   try {
     const [result] = await db.query(
-      "SELECT * FROM likes WHERE users_id = ? AND posts_id = ?",
+      "SELECT * FROM likes WHERE user_id = ? AND post_id = ?",
       [user_id, post_id]
     );
 
@@ -64,7 +65,7 @@ router.get("/likes-count/:postId", authenticateUser, async (req, res) => {
 
   try {
     const [result] = await db.query(
-      "SELECT COUNT(*) AS likeCount FROM likes WHERE posts_id = ?",
+      "SELECT COUNT(*) AS likeCount FROM likes WHERE post_id = ?",
       [postId]
     );
 
