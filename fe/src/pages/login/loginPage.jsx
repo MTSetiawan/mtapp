@@ -1,7 +1,8 @@
-import { Form } from "react-router-dom";
+import { Form, useActionData } from "react-router-dom";
 import LayoutAuth from "../../components/LayoutAuth";
 
 const LoginPage = () => {
+  const action = useActionData();
   return (
     <LayoutAuth>
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
@@ -39,6 +40,13 @@ const LoginPage = () => {
                 Forgot password?
               </a>
             </label>
+          </div>
+          <div>
+            {action?.errorMessage && (
+              <div className="mb-4 text-red-600 text-sm">
+                {action.errorMessage}
+              </div>
+            )}
           </div>
           <div className="form-control mt-6">
             <button className="btn btn-primary" type="submit">

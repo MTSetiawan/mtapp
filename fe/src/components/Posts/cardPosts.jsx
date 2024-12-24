@@ -19,7 +19,6 @@ const CardPosts = ({ api, useGrid }) => {
       }
     >
       {api.map((data) => {
-        console.log(data);
         return (
           <div
             className="card bg-gray-100 w-full shadow-xl mt-3 text-black"
@@ -36,10 +35,12 @@ const CardPosts = ({ api, useGrid }) => {
                 userLiked={data.userLiked}
               />
               <p>{getRelativeTime(data.created_at)}</p>
-              <p className="text-gray-600">
-                {data.comment_count}{" "}
-                {data.comment_count === 1 ? "comment" : "comments"}
-              </p>
+              <Link to={`/posts/${data.id}`}>
+                <p className="text-gray-600">
+                  {data.comment_count}{" "}
+                  {data.comment_count === 1 ? "comment" : "comments"}
+                </p>
+              </Link>
             </div>
           </div>
         );

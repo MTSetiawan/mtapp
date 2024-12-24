@@ -17,7 +17,6 @@ export const UserProvider = ({ children }) => {
             },
           });
           setUser(response.data);
-          console.log(response);
         }
       } catch (error) {
         console.error("Error fetching user data", error);

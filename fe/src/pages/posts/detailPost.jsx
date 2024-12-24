@@ -7,7 +7,6 @@ import Comments from "../../components/comments/Comments";
 const DetailPost = () => {
   const { postId } = useParams();
   const data = useLoaderData();
-  console.log("detail", data);
 
   const getRelativeTime = (dateString) => {
     const relativeTime = formatDistanceToNow(new Date(dateString), {

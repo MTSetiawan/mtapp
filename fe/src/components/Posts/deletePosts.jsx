@@ -19,7 +19,6 @@ const DeletePostButton = (postId) => {
         }
       );
 
-      console.log(response.data.message);
       alert("Post deleted successfully");
     } catch (error) {
       console.error("Error deleting post:", error);

@@ -16,7 +16,6 @@ exports.register = async (req, res) => {
       process.env.BASE_URL || "http://localhost:3000"
     }/images/default-profile.jpg`;
 
-    console.log("Preparing query...");
     const sql =
       "INSERT INTO users (username,email, password,profile_image) VALUES (?, ?,?,?)";
     db.query(
@@ -27,14 +26,16 @@ exports.register = async (req, res) => {
           console.error("Database query error: ", err);
           return res.status(500).json({ message: "Database error" });
         }
-        console.log("Query executed successfully:", result);
-        res.status(201).json({ message: "Register Successful" });
+        const userId = result.insertId; // Ambil ID user yang baru terdaftar
+        const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+          expiresIn: "1h",
+        });
+
+        res.status(201).json({ message: "Register Successful", token });
       }
     );
 
-    console.log("Endpoint /register called");
     res.status(201).json({ message: "Register Successful" });
-    console.log("Response sent");
   } catch (err) {
     console.error("Error during registration: ", err);
     res.status(500).json({ message: "Internal server error" });
@@ -73,29 +74,5 @@ exports.login = async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
-  }
-};
-
-exports.search = async (req, res) => {
-  const searchQuery = req.query.q;
-
-  if (!searchQuery) {
-    return res.status(400).json({ message: "Search query is required" });
-  }
-
-  try {
-    const results = await new Promise((resolve, reject) => {
-      db.query(
-        "SELECT id, username FROM users WHERE username LIKE ? LIMIT 10",
-        [`%${searchQuery}%`],
-        (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-        }
-      );
-    });
-    res.status(200).json({ data: results });
-  } catch (error) {
-    res.status(500).json({ message: "Error searching users", error });
   }
 };
