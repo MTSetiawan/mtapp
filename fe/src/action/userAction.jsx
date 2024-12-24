@@ -13,10 +13,11 @@ export const registerAction = async ({ request }) => {
       { username, email, password }
     );
 
-    console.log("Response from API:", response);
     if (response.status === 201) {
-      console.log("Redirecting to /login");
-      return redirect("/login");
+      const { token } = response.data;
+
+      localStorage.setItem("token", token);
+      return redirect("/dashboard");
     } else {
       console.error("Response data missing or invalid");
     }
@@ -42,11 +43,14 @@ export const loginAction = async ({ request }) => {
       localStorage.setItem("token", token);
 
       return redirect("/dashboard");
-    } else {
-      console.error("Login failed:", response.data.message);
     }
   } catch (error) {
-    console.error("Error during login:", error.message);
+    if (error.response && error.response.status === 400) {
+      return { errorMessage: error.response.data.message };
+    } else {
+      console.error("Unexpected error during login:", error.message);
+      return { errorMessage: "Something went wrong. Please try again." };
+    }
   }
 };
 

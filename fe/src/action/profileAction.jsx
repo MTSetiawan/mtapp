@@ -33,7 +33,6 @@ export const UpdateUsernameAction = async ({ request }) => {
   const token = localStorage.getItem("token");
   const form = await request.formData();
   const newUsername = form.get("newUsername");
-  console.log("new Username", newUsername);
 
   if (!newUsername) {
     return { error: "newUsername is required" };

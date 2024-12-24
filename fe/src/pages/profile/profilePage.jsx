@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import CardPosts from "../../components/Posts/cardPosts";
 import useProfilePage from "../../components/Profile/useProfilePage";
 import FollowButton from "../../components/Profile/followButton";
+import MessageButton from "../../components/Message/ButtonMessages";
 
 const ProfilePage = () => {
   const { userId } = useParams();
@@ -52,6 +53,7 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className="mt-3">
+            <MessageButton receiverId={profile?.id} />
             {loggedInUserId !== profile?.id && (
               <FollowButton
                 userId={profile?.id}

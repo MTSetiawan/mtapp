@@ -3,12 +3,11 @@ const db = require("../model/database");
 const authenticateUser = require("../middleware");
 
 const router = express.Router();
-// Menampilkan komentar pada post tertentu
 router.get("/posts/:postId/comments", authenticateUser, async (req, res) => {
   const { postId } = req.params;
 
   const sql =
-    "SELECT comments.*, users.username FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = ?";
+    "SELECT comments.*, users.username, profile_image FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = ?";
   try {
     const [comments] = await db.query(sql, [postId]);
     res.status(200).json(comments);
@@ -20,11 +19,10 @@ router.get("/posts/:postId/comments", authenticateUser, async (req, res) => {
   }
 });
 
-// Menambahkan komentar pada post tertentu
 router.post("/posts/:postId/comments", authenticateUser, async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
-  const userId = req.user.id; // Assuming the user is authenticated and we have user ID
+  const userId = req.user.id;
   console.log(content);
 
   if (!content) {

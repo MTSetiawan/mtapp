@@ -18,28 +18,17 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 const PORT = 3002;
 
-app.get("/", authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-
+app.get("/search", authenticateToken, async (req, res) => {
   try {
-    const connection = await db.getConnection();
+    const [users] = await db.execute(
+      "SELECT id, username, profile_image FROM users WHERE id != ?",
+      [req.user.id]
+    );
 
-    try {
-      const [results] = await connection.execute(
-        `SELECT * FROM users WHERE id = ?`,
-        [userId]
-      );
-
-      if (results.length === 0) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      res.json(results[0]);
-    } finally {
-      connection.release();
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 

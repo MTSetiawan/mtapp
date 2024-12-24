@@ -49,7 +49,6 @@ export const createPostAction = async ({ request }) => {
   const token = localStorage.getItem("token");
   const form = await request.formData();
   const contentPosts = form.get("contentPosts");
-  console.log("Content", contentPosts);
 
   if (!contentPosts) {
     return { error: "Content is required" };

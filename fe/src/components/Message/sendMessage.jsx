@@ -8,11 +8,10 @@ const SendMessage = ({ receiverId, token }) => {
   const handleSend = async () => {
     try {
       await axios.post(
-        "/api/messages",
-        { receiver_id: receiverId, message },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        axios.get(
+          `${import.meta.env.VITE_API_URL}/api/users/message/${receiverId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
       );
       setMessage("");
     } catch (error) {

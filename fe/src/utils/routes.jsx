@@ -11,8 +11,9 @@ import {
   getDetailPostsAction,
 } from "../action/userPostsAction";
 import MessagePage from "../pages/message";
-import UserSearch from "../pages/search/userSearch";
+import UserSearch from "../pages/search";
 import DetailPost from "../pages/posts/detailPost";
+import MessageList from "../pages/message/messageList";
 
 export const router = createBrowserRouter([
   {
@@ -32,9 +33,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: async ({ params }) => {
       const { postId } = params;
-      console.log("dari Router", postId);
       const postDetail = await getDetailPostsAction(postId);
-      console.log(postDetail);
       return postDetail;
     },
   },
@@ -61,7 +60,12 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/message/:userId",
+    path: "/message",
+    element: <MessageList />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/message/:receiverId",
     element: <MessagePage />,
     errorElement: <ErrorPage />,
   },
